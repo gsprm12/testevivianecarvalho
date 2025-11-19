@@ -4,176 +4,287 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Teste de Temperamentos</title>
-
 <style>
-    body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 20px;
-        background: #f9f9f9;
-    }
-
-    .container {
-        max-width: 800px;
-        margin: 0 auto;
-        background: white;
-        padding: 20px;
-        border-radius: 10px;
-    }
-
-    h1, h2, h3 {
-        text-align: center;
-    }
-
-    button {
-        width: 100%;
-        padding: 15px;
-        font-size: 18px;
-        border: none;
-        border-radius: 8px;
-        margin-top: 10px;
-        cursor: pointer;
-        background: #e6d7ff;
-    }
-
-    .hidden {
-        display: none;
-    }
-
-    .resultado {
-        background: #f3ecff;
-        padding: 15px;
-        border-radius: 10px;
-        margin-top: 20px;
-    }
-
-    img {
-        width: 100%;
-        border-radius: 10px;
-        margin: 20px 0;
-    }
+  :root{
+    --bg:#f7f7fb; --card:#fff; --primary:#6b46c1; --muted:#6b7280;
+  }
+  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Arial}
+  body{margin:0;background:var(--bg);color:#111;display:flex;min-height:100vh;align-items:center;justify-content:center;padding:24px}
+  .wrap{width:100%;max-width:920px}
+  .card{background:var(--card);border-radius:12px;padding:26px;box-shadow:0 6px 20px rgba(13,16,35,0.06)}
+  .progress{height:10px;background:#e9e9ef;border-radius:999px;overflow:hidden;margin-bottom:18px}
+  .bar{height:100%;width:0%;background:linear-gradient(90deg,var(--primary),#9f7aea);transition:width .35s}
+  .qnum{font-size:13px;color:var(--muted);margin-bottom:8px}
+  h2.question{margin:6px 0 18px 0;font-size:18px}
+  .options{display:grid;gap:10px}
+  .option{
+    background:#fbfbfe;border:1px solid #eee;padding:12px;border-radius:10px;cursor:pointer;
+    transition:transform .08s,box-shadow .08s;
+  }
+  .option.selected{box-shadow:0 8px 30px rgba(99,102,241,0.12);transform:translateY(-3px);border-color:rgba(107,70,193,0.15)}
+  .controls{display:flex;gap:10px;justify-content:flex-end;margin-top:18px}
+  button.primary{background:var(--primary);color:#fff;border:0;padding:10px 14px;border-radius:10px;cursor:pointer}
+  button.ghost{background:transparent;color:var(--muted);border:1px solid #ececec}
+  .hidden{display:none}
+  .result{padding:18px;text-align:left}
+  .result h2{margin:6px 0 10px 0;text-align:center}
+  .desc{color:var(--muted);line-height:1.5;white-space:pre-line}
+  .result img{max-width:240px;margin:20px auto;display:block}
+  footer.small{font-size:12px;color:var(--muted);text-align:center;margin-top:12px}
+  .hero{text-align:center}
+  .hero img{max-width:100%;border-radius:12px;display:block;margin:0 auto}
+  .hero button{margin-top:20px;padding:12px 24px;font-size:16px;border-radius:8px;background:var(--primary);color:#fff;border:0;cursor:pointer}
+  .img-fallback{color:var(--muted);font-size:13px;margin-top:10px}
+  @media(max-width:520px){.card{padding:18px}.controls{flex-direction:column-reverse;align-items:stretch}button.primary{width:100%}}
 </style>
-
-<script>
-    // 🔗 SUBSTITUIR PELOS LINKS DAS IMAGENS
-    const imagemInicial = "COLE_AQUI_O_LINK_DA_IMAGEM_1";
-    const imagemFinal = "COLE_AQUI_O_LINK_DA_IMAGEM_2";
-
-    function mostrarPergunta(id) {
-        document.querySelectorAll(".tela").forEach(t => t.classList.add("hidden"));
-        document.getElementById(id).classList.remove("hidden");
-    }
-
-    let pontos = { sanguineo: 0, colerico: 0, fleumatico: 0, melancolico: 0 };
-
-    function responder(tipo) {
-        pontos[tipo]++;
-        const telaAtual = event.target.closest(".tela");
-        const proxima = telaAtual.nextElementSibling;
-
-        if (proxima && proxima.classList.contains("tela")) {
-            mostrarPergunta(proxima.id);
-        } else {
-            mostrarResultado();
-        }
-    }
-
-    function mostrarResultado() {
-        const maior = Object.keys(pontos).reduce((a, b) =>
-            pontos[a] > pontos[b] ? a : b
-        );
-
-        document.querySelectorAll(".tela").forEach(t => t.classList.add("hidden"));
-        document.getElementById("resultado").classList.remove("hidden");
-
-        document.getElementById("tituloResultado").innerText =
-            "Seu temperamento predominante é: " + maior.toUpperCase();
-
-        document.getElementById("textoResultado").innerHTML =
-            textosTemperamentos[maior];
-
-        document.getElementById("imagemFinal").src = imagemFinal;
-    }
-
-    const textosTemperamentos = {
-        sanguineo: `
-            O sanguíneo é comunicativo, animado, entusiasmado e motivador.
-            Sua presença ilumina ambientes e inspira pessoas ao redor.
-            Sua facilidade de adaptação o torna resiliente.
-            Porém, precisa cuidar da impulsividade e da falta de foco.
-        `,
-
-        colerico: `
-            O colérico é determinado, objetivo e orientado para resultados.
-            Tem grande capacidade de liderança e iniciativa.
-            Pode ser intenso e se irritar facilmente, mas seu senso de direção o conduz longe.
-        `,
-
-        fleumatico: `
-            O fleumático é tranquilo, apaziguador e sensato.
-            Possui enorme capacidade de escuta, paciência e harmonia.
-            Porém, tende à lentidão, procrastinação e passividade.
-            Cresce muito com o tempo, desenvolvendo discernimento e intuição.
-        `,
-
-        melancolico: `
-            O melancólico é profundo, detalhista, sensível e organizado.
-            É movido pela busca de significado e excelência em tudo que faz.
-            Por outro lado, pode ser perfeccionista, crítico consigo mesmo e emocionalmente intenso.
-        `
-    };
-</script>
-
 </head>
 <body>
+  <div class="wrap">
 
-<div class="container">
-
-    <!-- IMAGEM INICIAL -->
-    <img id="imagemInicial" src="COLE_AQUI_O_LINK_DA_IMAGEM_1">
-
-    <h1>Teste dos Temperamentos</h1>
-    <p style="text-align:center;">Clique para começar</p>
-
-    <button onclick="mostrarPergunta('p1')">Iniciar Teste</button>
-
-    <!-- PERGUNTAS -->
-    <div id="p1" class="tela hidden">
-        <h3>1. Como você reage a mudanças inesperadas?</h3>
-        <button onclick="responder('sanguineo')">Com flexibilidade</button>
-        <button onclick="responder('colerico')">Com ação imediata</button>
-        <button onclick="responder('fleumatico')">Com calma</button>
-        <button onclick="responder('melancolico')">Com análise profunda</button>
+    <!-- CAPA -->
+    <div class="card" id="capaCard">
+      <div class="hero">
+        <img id="heroImg" src="venha-comigo-descobrir-seu-temperamento.png" alt="Capa do teste">
+        <div id="heroImgFallback" class="img-fallback" style="display:none">(Imagem da capa não encontrada)</div>
+        <br>
+        <button id="startBtn" class="primary" type="button">Quero Descobrir</button>
+      </div>
     </div>
 
-    <div id="p2" class="tela hidden">
-        <h3>2. Como você prefere trabalhar?</h3>
-        <button onclick="responder('sanguineo')">Em equipe</button>
-        <button onclick="responder('colerico')">Liderando</button>
-        <button onclick="responder('fleumatico')">Em paz</button>
-        <button onclick="responder('melancolico')">Com organização</button>
-    </div>
-
-    <div id="p3" class="tela hidden">
-        <h3>3. Como você lida com conflitos?</h3>
-        <button onclick="responder('sanguineo')">Conversando</button>
-        <button onclick="responder('colerico')">Enfrentando</button>
-        <button onclick="responder('fleumatico')">Evitando</button>
-        <button onclick="responder('melancolico')">Refletindo</button>
+    <!-- QUIZ -->
+    <div class="card hidden" id="quizCard" aria-live="polite">
+      <div class="progress"><div class="bar" id="progressBar"></div></div>
+      <div class="qnum" id="qnum">Pergunta 1 de 9</div>
+      <h2 class="question" id="questionText">Texto da pergunta</h2>
+      <div class="options" id="optionsList" role="list"></div>
+      <div class="controls">
+        <button class="ghost" id="backBtn" type="button">Voltar</button>
+        <button id="nextBtn" class="primary" type="button">Próxima</button>
+      </div>
     </div>
 
     <!-- RESULTADO -->
-    <div id="resultado" class="tela hidden">
-        <h2 id="tituloResultado"></h2>
-        <div id="textoResultado" class="resultado"></div>
-
-        <img id="imagemFinal" src="">
-
-        <h3>Siga para mais conteúdos sobre temperamentos</h3>
-        <p style="text-align:center; font-size:20px;">@viviacarvalho__</p>
+    <div class="card hidden" id="resultCard">
+      <div class="result">
+        <h2 id="resultTitle">Seu temperamento</h2>
+        <img id="resultImg" src="viviane-carvalho-instagram.png" alt="Resultado">
+        <div id="resultImgFallback" class="img-fallback" style="display:none">(Imagem do resultado não encontrada)</div>
+        <p class="desc" id="resultText"></p>
+        <div style="margin-top:14px; text-align:center">
+          <button id="restartBtn" class="primary" type="button">Fazer de novo</button>
+        </div>
+      </div>
     </div>
 
-</div>
+    <footer class="small">O autoconhecimento é a chave da sua liberdade<br>– Viviane Carvalho</footer>
+  </div>
 
+<script>
+/* ========== Iniciação após DOM carregado ========== */
+document.addEventListener('DOMContentLoaded', function () {
+
+  /* ========== Perguntas e pontuação ========== */
+  const questions = [
+    { q:"Quando você participa de um grupo, você costuma:", options:[
+      {t:"Sanguíneo", txt:"Conversar animado e ser o centro da roda"},
+      {t:"Colérico", txt:"Tomar a dianteira e organizar as tarefas"},
+      {t:"Melancólico", txt:"Observar e planejar antes de falar"},
+      {t:"Fleumático", txt:"Manter a calma e apoiar discretamente"}
+    ]},
+    { q:"Num projeto, você se sente mais confortável:", options:[
+      {t:"Sanguíneo", txt:"Trazendo ideias novas e criatividade"},
+      {t:"Colérico", txt:"Definindo metas e prazos claros"},
+      {t:"Melancólico", txt:"Cuidando dos detalhes e qualidade"},
+      {t:"Fleumático", txt:"Garantindo harmonia no time"}
+    ]},
+    { q:"Sua reação em conflitos geralmente é:", options:[
+      {t:"Sanguíneo", txt:"Tentar descontrair e aliviar a tensão"},
+      {t:"Colérico", txt:"Encarar o problema de frente"},
+      {t:"Melancólico", txt:"Refletir antes de reagir"},
+      {t:"Fleumático", txt:"Evitar confronto e acalmar as partes"}
+    ]},
+    { q:"Você prefere trabalhar:", options:[
+      {t:"Sanguíneo", txt:"Em tarefas sociais e dinâmicas"},
+      {t:"Colérico", txt:"Em liderança ou decisões importantes"},
+      {t:"Melancólico", txt:"Em análise e qualidade técnica"},
+      {t:"Fleumático", txt:"Com rotina estável e previsível"}
+    ]},
+    { q:"Num evento, as pessoas te descrevem como:", options:[
+      {t:"Sanguíneo", txt:"Extrovertido e comunicativo"},
+      {t:"Colérico", txt:"Enérgico e direto"},
+      {t:"Melancólico", txt:"Reservado e organizado"},
+      {t:"Fleumático", txt:"Calmo e confiável"}
+    ]},
+    { q:"Ao tomar decisões você costuma:", options:[
+      {t:"Sanguíneo", txt:"Seguir a intuição e o sentimento do momento"},
+      {t:"Colérico", txt:"Agir rapidamente e com firmeza"},
+      {t:"Melancólico", txt:"Pesquisar e avaliar opções"},
+      {t:"Fleumático", txt:"Consultar outros e manter equilíbrio"}
+    ]},
+    { q:"O que te motiva mais no trabalho?", options:[
+      {t:"Sanguíneo", txt:"Interação social e reconhecimento"},
+      {t:"Colérico", txt:"Resultados e desafios"},
+      {t:"Melancólico", txt:"Qualidade e perfeição"},
+      {t:"Fleumático", txt:"Estabilidade e cooperação"}
+    ]},
+    { q:"Você se descreve como alguém que:", options:[
+      {t:"Sanguíneo", txt:"Empolga fácil outras pessoas"},
+      {t:"Colérico", txt:"Assume a responsabilidade"},
+      {t:"Melancólico", txt:"Preocupa-se com o certo e o errado"},
+      {t:"Fleumático", txt:"Procura manter a paz"}
+    ]},
+    { q:"Quando você está em uma situação inesperada, o que faz mais sentido pra você?", options:[
+      {t:"Colérico", txt:"Tomo a frente e decido rápido, mesmo que depois eu ajuste"},
+      {t:"Sanguíneo", txt:"Tento deixar o ambiente leve, buscando conversar e distrair"},
+      {t:"Melancólico", txt:"Penso bem antes de agir, analisando os detalhes"},
+      {t:"Fleumático", txt:"Mantenho a calma e espero as coisas se organizarem"}
+    ]}
+  ];
+
+  /* ========== textos finais (versões longas) ========== */
+  const resultTexts = {
+    "Sanguíneo": {
+      title: "Sanguíneo",
+      text: "Símbolo: AR\n\nO sanguíneo, assim como o colérico, se irrita fácil e fortemente, sentindo-se, da mesma forma, impulsionado a uma reação rápida; mas a impressão se apaga logo e não fica por muito tempo na alma. Sanguíneo é o típico “fogo de palha”, ele tende a dar uma resposta imediata, mas que, rapidamente, se esvai.\n\nCostuma falar antes de pensar, não necessariamente por impulsividade, mas porque é seu jeito de se orientar no mundo. Mas, nem todo sanguíneo falará muito. Alguns podem ter o traço de timidez, que pode dificultar a identificação do temperamento. O que deve ser preponderante nessa questão é: o não falar é algo que incomoda ou não? No geral, sanguíneos tímidos se incomodam profundamente quando não conseguem falar em determinado ambiente.\n\nSuas principais características são: motiva-se facilmente; altamente entusiasmado. Expressa-se e faz amizade facilmente. Geralmente é prestativo, alegre, afável e simpático. É criativo e tem uma imaginação ardente, além de ser otimista e brincalhão. Assimila as coisas rapidamente, mas não aprofunda e nem costuma guardar rancor.\n\nQuanto aos defeitos, destacam-se: bagunceiro, inconstante, procrastinador. Tem dificuldade com esforço duro e contínuo. É superficial e julga rapidamente ter entendido alguma coisa. Tem alta facilidade de distração, fala muito e ouve pouco."
+    },
+
+    "Colérico": {
+      title: "Colérico",
+      text: "Símbolo: FOGO\n\nO colérico se irrita fácil e fortemente; se sente impulsionado a reagir de imediato; a impressão fica por muito tempo na alma e facilmente conduz a novas irritações. Ele é voltado para a resolução das coisas e consegue enxergá-las com praticidade.\n\nGeralmente, os coléricos são fortes e magnânimos; por isso, não é possível contê-los, pois seria como fechar a tampa de uma panela de pressão. Ademais, coléricos não costumam tomar decisões para agradar aos demais. Eles perseguem aquilo que acreditam, seus objetivos e ideais. Tende ao orgulho.\n\nSuas principais características são: expansividade, praticidade, liderança, assertividade, raciocínio rápido, gosto por desafios e competições, trabalhador, educador, pessoa de convicção e vontade fortes, com forte determinação e magnanimidade. O colérico é aquele que empreende, que vai à frente, que transforma e que está sempre buscando fazer o melhor.\n\nSeus defeitos incluem: propensão à ira, insensibilidade e orgulho; caso não percorram um caminho de virtudes, podem se tornar propensos à vingança. Costumam ter pouco tato com as pessoas e podem ser imprudentes e arrogantes, por se verem sempre com a razão. Seu grande defeito é exatamente conseguir resolver problemas externos, mas ter um ponto cego nos problemas internos."
+    },
+
+    "Melancólico": {
+      title: "Melancólico",
+      text: "Símbolo: TERRA\n\nO melancólico se irrita bem pouco diante das impressões da alma. A reação não se produz nele ou chega depois de certo tempo. As impressões, no entanto, ficam gravadas muito profundamente na alma, sobretudo se se repetem sempre as mesmas.\n\nUm dos grandes destaques desse temperamento é a memória sui – ou seja, o melancólico tende a remoer muitos elementos que lhe aconteceram e sua excelente memória contribuirá para um movimento, por vezes, de remorso, em que ele segue reabrindo feridas sem permitir que elas sarem.\n\nSuas principais características são: organizado, metódico, apreciador da ordem e da rotina, profundo, saudosista e inclinado à solidão e reflexão. Melancólicos possuem uma inteligência aguda e profunda e sofrem muito com frieza e ingratidão, que podem gerar feridas na alma.\n\nGostam de ter muito claro o que deve ser feito e tendem a desaprovar mudanças de planos, especialmente quando estas acontecem repentinamente.\n\nQuanto às fraquezas: forte tendência à tristeza e ao pessimismo. São excessivamente analistas, o que pode gerar ceticismo e criticismo. O melancólico expressa: “É difícil, eu quero, mas sei que não vai dar certo”. São retraídos e tímidos, com dificuldade em fazer amizade e expressar sentimentos.\n\nPrecisam ter extremo cuidado para não cair no ensimesmamento — uma espécie de hipnose interna que o faz se trancar e hiper dimensionar tudo o que lhe acontece, ficando preso em ciclos internos que geram tristeza."
+    },
+
+    "Fleumático": {
+      title: "Fleumático",
+      text: "O fleumático não se deixa afetar tão facilmente pelas impressões, nem se sente inclinado a reagir; e as impressões, por sua parte, logo se desvanecem.\n\nSuas principais características são: apaziguador, inimigo dos conflitos, facilmente adaptável, prudente, sensato, reflexivo, tranquilo, discreto. É um coração bom, mas pouco entusiasmado, com baixa espontaneidade. São apreciadores da harmonia e da cooperação, intuitivos e dificilmente se irritam.\n\nO fleumático se beneficia profundamente com a passagem do tempo, desenvolvendo discernimento e apurando a intuição. Uma de suas melhores características é a capacidade de escuta — ele guarda as relíquias do outro sem deixá-las se perder.\n\nEntre os defeitos: lentidão, falta de entusiasmo, tendência à procrastinação e à passividade. Pode perder oportunidades por falta de ação. O mais forte dos defeitos costuma ser a preguiça, levando-o a se fechar no próprio mundo. Pode ser influenciável, como a água que toma a forma do recipiente.\n\nTambém sofre do “efeito tsunami”: após recuar e evitar conflitos por muito tempo, pode reagir de forma desproporcional."
+    }
+  };
+
+  /* ========== lógica do quiz ========== */
+  let current = 0;
+  const answers = new Array(questions.length).fill(null);
+
+  const qnum = document.getElementById('qnum');
+  const qText = document.getElementById('questionText');
+  const optionsList = document.getElementById('optionsList');
+  const nextBtn = document.getElementById('nextBtn');
+  const backBtn = document.getElementById('backBtn');
+  const progressBar = document.getElementById('progressBar');
+  const quizCard = document.getElementById('quizCard');
+  const resultCard = document.getElementById('resultCard');
+  const resultTitle = document.getElementById('resultTitle');
+  const resultText = document.getElementById('resultText');
+  const restartBtn = document.getElementById('restartBtn');
+  const capaCard = document.getElementById('capaCard');
+  const startBtn = document.getElementById('startBtn');
+
+  const heroImg = document.getElementById('heroImg');
+  const heroImgFallback = document.getElementById('heroImgFallback');
+  const resultImg = document.getElementById('resultImg');
+  const resultImgFallback = document.getElementById('resultImgFallback');
+
+  /* fallback para imagens que não existam */
+  if (heroImg) heroImg.addEventListener('error', ()=>{ heroImg.style.display='none'; heroImgFallback.style.display='block'; });
+  if (resultImg) resultImg.addEventListener('error', ()=>{ resultImg.style.display='none'; resultImgFallback.style.display='block'; });
+
+  /* estado inicial */
+  nextBtn.disabled = true;
+  backBtn.style.display = 'none';
+
+  function render(){
+    if(current >= questions.length){
+      showResult();
+      return;
+    }
+    qnum.textContent = `Pergunta ${current+1} de ${questions.length}`;
+    const progressPercent = Math.round((current/questions.length)*100);
+    progressBar.style.width = progressPercent + '%';
+
+    const item = questions[current];
+    qText.textContent = item.q;
+    optionsList.innerHTML = '';
+    item.options.forEach((opt,i)=>{
+      const div=document.createElement('div');
+      div.className='option'+(answers[current]===i?' selected':'');
+      div.setAttribute('role','listitem');
+      div.tabIndex = 0;
+      div.textContent=opt.txt;
+      div.onclick=()=>{
+        answers[current]=i;
+        Array.from(optionsList.children).forEach((c,idx)=>c.classList.toggle('selected',idx===i));
+        nextBtn.disabled=false;
+      };
+      div.onkeydown = (e) => { if(e.key === 'Enter' || e.key === ' ') div.click(); };
+      optionsList.appendChild(div);
+    });
+
+    backBtn.style.display=(current===0?'none':'inline-block');
+    nextBtn.textContent=(current===questions.length-1?'Ver resultado':'Próxima');
+    nextBtn.disabled=(answers[current]===null);
+  }
+
+  nextBtn.addEventListener('click',()=>{
+    if(answers[current]===null) return;
+    current++;
+    render();
+  });
+
+  backBtn.addEventListener('click',()=>{
+    if(current>0) current--;
+    render();
+  });
+
+  function showResult(){
+    const totals={"Sanguíneo":0,"Colérico":0,"Melancólico":0,"Fleumático":0};
+    answers.forEach((ans,qIndex)=>{
+      if(ans==null) return;
+      const t=questions[qIndex].options[ans].t;
+      totals[t]=(totals[t]||0)+1;
+    });
+    const maxVal=Math.max(...Object.values(totals));
+    const winners=Object.keys(totals).filter(k=>totals[k]===maxVal);
+
+    let title,text;
+    if(winners.length===1){
+      title=resultTexts[winners[0]].title;
+      text=resultTexts[winners[0]].text;
+    } else {
+      title=winners.join(' + ');
+      text=winners.map(w=>`${resultTexts[w].title}: ${resultTexts[w].text}`).join('\n\n');
+    }
+
+    quizCard.classList.add('hidden');
+    resultCard.classList.remove('hidden');
+    resultTitle.textContent=title;
+    resultText.textContent=text;
+  }
+
+  restartBtn.addEventListener('click',()=>{
+    for(let i=0;i<answers.length;i++) answers[i]=null;
+    current=0;
+    resultCard.classList.add('hidden');
+    capaCard.classList.remove('hidden');
+    nextBtn.disabled = true;
+    // Restore hero image display if it exists (no forced reload)
+    if(heroImg && heroImg.naturalWidth) { heroImg.style.display='block'; heroImgFallback.style.display='none'; }
+    if(resultImg && resultImg.naturalWidth) { resultImg.style.display='block'; resultImgFallback.style.display='none'; }
+  });
+
+  /* event listener seguro para o botão iniciar */
+  startBtn.addEventListener('click', ()=>{
+    capaCard.classList.add('hidden');
+    quizCard.classList.remove('hidden');
+    render();
+  });
+
+  /* permitir iniciar com Enter quando em foco */
+  startBtn.addEventListener('keyup', (e)=>{ if(e.key === 'Enter') startBtn.click(); });
+
+}); /* fim DOMContentLoaded */
+</script>
 </body>
 </html>
