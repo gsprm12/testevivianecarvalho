@@ -239,29 +239,29 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function showResult(){
-    const totals={"Sanguíneo":0,"Colérico":0,"Melancólico":0,"Fleumático":0};
-    answers.forEach((ans,qIndex)=>{
-      if(ans==null) return;
-      const t=questions[qIndex].options[ans].t;
-      totals[t]=(totals[t]||0)+1;
-    });
-    const maxVal=Math.max(...Object.values(totals));
-    const winners=Object.keys(totals).filter(k=>totals[k]===maxVal);
+  const totals={"Sanguíneo":0,"Colérico":0,"Melancólico":0,"Fleumático":0};
+  answers.forEach((ans,qIndex)=>{
+    if(ans==null) return;
+    const t=questions[qIndex].options[ans].t;
+    totals[t]=(totals[t]||0)+1;
+  });
+  const maxVal=Math.max(...Object.values(totals));
+  const winners=Object.keys(totals).filter(k=>totals[k]===maxVal);
 
-    let title,text;
-    if(winners.length===1){
-      title=resultTexts[winners[0]].title;
-      text=resultTexts[winners[0]].text;
-    } else {
-      title=winners.join(' + ');
-      text=winners.map(w=>`${resultTexts[w].title}: ${resultTexts[w].text}`).join('\n\n');
-    }
-
-    quizCard.classList.add('hidden');
-    resultCard.classList.remove('hidden');
-    resultTitle.textContent=title;
-    resultText.textContent=text;
+  let title,text;
+  if(winners.length===1){
+    title=resultTexts[winners[0]].title;
+    text=resultTexts[winners[0]].text;
+  } else {
+    title=winners.join(' + ');
+    text=winners.map(w=>`${resultTexts[w].title}: ${resultTexts[w].text}`).join('\n\n');
   }
+
+  quizCard.classList.add('hidden');
+  resultCard.classList.remove('hidden');
+  resultTitle.textContent=title;
+  resultText.textContent=text;
+}
 
   restartBtn.addEventListener('click',()=>{
     for(let i=0;i<answers.length;i++) answers[i]=null;
@@ -288,3 +288,4 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </body>
 </html>
+
