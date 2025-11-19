@@ -133,9 +133,10 @@ document.addEventListener('DOMContentLoaded', function () {
       {t:"Melancólico", txt:"Preocupa-se com o certo e o errado"},
       {t:"Fleumático", txt:"Procura manter a paz"}
     ]},
+    /* Pergunta 9 corrigida para manter ordem consistente */
     { q:"Quando você está em uma situação inesperada, o que faz mais sentido pra você?", options:[
-      {t:"Colérico", txt:"Tomo a frente e decido rápido, mesmo que depois eu ajuste"},
       {t:"Sanguíneo", txt:"Tento deixar o ambiente leve, buscando conversar e distrair"},
+      {t:"Colérico", txt:"Tomo a frente e decido rápido, mesmo que depois eu ajuste"},
       {t:"Melancólico", txt:"Penso bem antes de agir, analisando os detalhes"},
       {t:"Fleumático", txt:"Mantenho a calma e espero as coisas se organizarem"}
     ]}
@@ -239,29 +240,26 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function showResult(){
-  const totals={"Sanguíneo":0,"Colérico":0,"Melancólico":0,"Fleumático":0};
-  answers.forEach((ans,qIndex)=>{
-    if(ans==null) return;
-    const t=questions[qIndex].options[ans].t;
-    totals[t]=(totals[t]||0)+1;
-  });
-  const maxVal=Math.max(...Object.values(totals));
-  const winners=Object.keys(totals).filter(k=>totals[k]===maxVal);
+    const totals={"Sanguíneo":0,"Colérico":0,"Melancólico":0,"Fleumático":0};
+    answers.forEach((ans,qIndex)=>{
+      if(ans==null) return;
+      const t=questions[qIndex].options[ans].t;
+      totals[t]=(totals[t]||0)+1;
+    });
+    const maxVal=Math.max(...Object.values(totals));
+    const winners=Object.keys(totals).filter(k=>totals[k]===maxVal);
 
-  let title,text;
-  if(winners.length===1){
-    title=resultTexts[winners[0]].title;
-    text=resultTexts[winners[0]].text;
-  } else {
-    title=winners.join(' + ');
-    text=winners.map(w=>`${resultTexts[w].title}: ${resultTexts[w].text}`).join('\n\n');
+    // Escolhe apenas 1 resultado (o primeiro da lista winners)
+    const final = winners[0];
+
+    const title = resultTexts[final].title;
+    const text  = resultTexts[final].text;
+
+    quizCard.classList.add('hidden');
+    resultCard.classList.remove('hidden');
+    resultTitle.textContent=title;
+    resultText.textContent=text;
   }
-
-  quizCard.classList.add('hidden');
-  resultCard.classList.remove('hidden');
-  resultTitle.textContent=title;
-  resultText.textContent=text;
-}
 
   restartBtn.addEventListener('click',()=>{
     for(let i=0;i<answers.length;i++) answers[i]=null;
@@ -288,4 +286,3 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 </body>
 </html>
-
