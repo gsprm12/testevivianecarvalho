@@ -83,4 +83,154 @@
 /* ========== Perguntas e pontuação ========== */
 const questions = [
   { q:"Quando você participa de um grupo, você costuma:", options:[
-    {t:
+    {t:"Assumir a liderança e direcionar o grupo", v:"colerico"},
+    {t:"Conversar, animar e integrar todos", v:"sanguineo"},
+    {t:"Observar antes de agir e analisar tudo", v:"melancolico"},
+    {t:"Acompanhar o ritmo do grupo sem se impor", v:"fleumatico"}
+  ]},
+  { q:"Quando surge um problema inesperado, sua primeira reação é:", options:[
+    {t:"Resolver rápido e tomar decisões", v:"colerico"},
+    {t:"Contar para alguém e conversar sobre", v:"sanguineo"},
+    {t:"Pensar muito antes de agir", v:"melancolico"},
+    {t:"Manter a calma e esperar o melhor caminho", v:"fleumatico"}
+  ]},
+  { q:"Como você lida com conflitos?", options:[
+    {t:"Vai direto ao ponto e resolve", v:"colerico"},
+    {t:"Tenta contornar e evitar tensão", v:"sanguineo"},
+    {t:"Se magoa facilmente e pensa no assunto", v:"melancolico"},
+    {t:"Evita conflito ao máximo", v:"fleumatico"}
+  ]},
+  { q:"Seu ritmo natural é:", options:[
+    {t:"Rápido e objetivo", v:"colerico"},
+    {t:"Dinâmico e agitado", v:"sanguineo"},
+    {t:"Constante e detalhista", v:"melancolico"},
+    {t:"Tranquilo e estável", v:"fleumatico"}
+  ]},
+  { q:"Quando precisa tomar decisões:", options:[
+    {t:"Decide imediatamente", v:"colerico"},
+    {t:"Decide rápido, mas muda se necessário", v:"sanguineo"},
+    {t:"Demora e analisa tudo", v:"melancolico"},
+    {t:"Pensa, mas prefere opções simples", v:"fleumatico"}
+  ]},
+  { q:"Como você prefere trabalhar?", options:[
+    {t:"Do meu jeito, com autonomia", v:"colerico"},
+    {t:"Em equipe e com movimento", v:"sanguineo"},
+    {t:"Com organização e estrutura", v:"melancolico"},
+    {t:"Com calma e sem pressão", v:"fleumatico"}
+  ]},
+  { q:"O que mais te incomoda?", options:[
+    {t:"Lentidão e indecisão", v:"colerico"},
+    {t:"Rotina e silêncio", v:"sanguineo"},
+    {t:"Bagunça e desorganização", v:"melancolico"},
+    {t:"Pressão e cobrança", v:"fleumatico"}
+  ]},
+  { q:"Quando alguém te critica:", options:[
+    {t:"Defende seu ponto na hora", v:"colerico"},
+    {t:"Leva numa boa, mas pode se irritar depois", v:"sanguineo"},
+    {t:"Fica pensando naquilo por dias", v:"melancolico"},
+    {t:"Prefere evitar conflito e ficar na sua", v:"fleumatico"}
+  ]},
+  { q:"O que mais te descreve?", options:[
+    {t:"Focado, firme e direto", v:"colerico"},
+    {t:"Expressivo, comunicativo e impulsivo", v:"sanguineo"},
+    {t:"Profundo, sensível e organizado", v:"melancolico"},
+    {t:"Pacífico, constante e paciente", v:"fleumatico"}
+  ]}
+];
+
+let index = 0;
+let answers = [];
+
+const capaCard = document.getElementById("capaCard");
+const quizCard = document.getElementById("quizCard");
+const resultCard = document.getElementById("resultCard");
+
+const questionText = document.getElementById("questionText");
+const optionsList = document.getElementById("optionsList");
+const qnum = document.getElementById("qnum");
+const progressBar = document.getElementById("progressBar");
+
+const nextBtn = document.getElementById("nextBtn");
+const backBtn = document.getElementById("backBtn");
+const restartBtn = document.getElementById("restartBtn");
+
+function iniciarQuiz(){
+  capaCard.classList.add("hidden");
+  quizCard.classList.remove("hidden");
+  index = 0;
+  answers = [];
+  loadQuestion();
+}
+
+function loadQuestion(){
+  const q = questions[index];
+  qnum.textContent = `Pergunta ${index+1} de ${questions.length}`;
+  questionText.textContent = q.q;
+
+  optionsList.innerHTML = "";
+  q.options.forEach((o,i)=>{
+    const opt = document.createElement("div");
+    opt.className = "option";
+    opt.textContent = o.t;
+    opt.onclick = ()=>{
+      document.querySelectorAll('.option').forEach(el=>el.classList.remove('selected'));
+      opt.classList.add('selected');
+      answers[index] = o.v;
+    };
+    optionsList.appendChild(opt);
+  });
+
+  progressBar.style.width = ((index)/questions.length)*100 + "%";
+  backBtn.style.visibility = index === 0 ? "hidden" : "visible";
+}
+
+nextBtn.onclick = ()=>{
+  if(!answers[index]) return alert("Selecione uma opção para continuar.");
+  index++;
+  if(index >= questions.length){
+    finalizar();
+  } else {
+    loadQuestion();
+  }
+};
+
+backBtn.onclick = ()=>{
+  if(index > 0){ index--; loadQuestion(); }
+};
+
+function finalizar(){
+  quizCard.classList.add("hidden");
+  resultCard.classList.remove("hidden");
+
+  const counts = {
+    colerico:0,
+    sanguineo:0,
+    melancolico:0,
+    fleumatico:0
+  };
+
+  answers.forEach(a=>counts[a]++);
+
+  const top = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0][0];
+
+  const resultTitle = document.getElementById("resultTitle");
+  const resultText = document.getElementById("resultText");
+
+  const textos = {
+    colerico:"Você tem um temperamento COLÉRICO: decidido(a), direto(a), determinado(a) e com grande capacidade de liderança.",
+    sanguineo:"Você tem um temperamento SANGUÍNEO: comunicativo(a), leve, espontâneo(a) e de energia contagiante.",
+    melancolico:"Você tem um temperamento MELANCÓLICO: profundo(a), organizado(a), sensível e muito detalhista.",
+    fleumatico:"Você tem um temperamento FLEUMÁTICO: calmo(a), paciente, estável e extremamente confiável."
+  };
+
+  resultTitle.textContent = "Seu temperamento é: " + top.toUpperCase();
+  resultText.textContent = textos[top];
+}
+
+restartBtn.onclick = ()=>{
+  resultCard.classList.add("hidden");
+  capaCard.classList.remove("hidden");
+};
+</script>
+</body>
+</html>
